@@ -1,0 +1,47 @@
+name: RebuildCategoryByColumnValue
+id:   RebuildCategoryByColumnValue
+key:  rebuildcategorybycolumnvalue
+version: 0.1
+description: Rebuild category by category's column value.
+tags:
+    function:
+        RebuildCategoryByColumnValue: >
+                sub {
+                        my ( $ctx, $args, $cond ) = @_;
+                        my $app = MT->instance;
+                        return if ref( $app ) !~ /^MT::App/;
+                        my $mode = $app->mode;
+                        return if ( $mode =~ /preview/ );
+                        my $blog_id = $args->{ blog_id };
+                        if (! $blog_id ) {
+                            $blog_id = $app->blog->id;
+                        }
+                        if ( $blog_id eq 'all' ) {
+                            $blog_id = undef;
+                        }
+                        my $column = $args->{ column } || 'label';
+                        my $class = $args->{ class } || 'category';
+                        my $eq = $args->{ eq };
+                        return '' unless $eq;
+                        my $params;
+                        $params->{ blog_id } = $blog_id if $blog_id;
+                        $params->{ archive_type } = $class;
+                        $params->{ $column } = $eq;
+                        require MT::Category;
+                        my @categories = MT::Category->load( $params );
+                        $params->{ archive_type } = ($class = 'category') ? 'Category' : 'Folder';
+                        $params->{ $column } = undef;
+                        for my $category ( @categories ) {
+                            $params->{ category_id } = $category->id;
+                            my @fis = MT::FileInfo->load( $params );
+                            require MT::WeblogPublisher;
+                            my $pub = MT::WeblogPublisher->new;
+                            if ( @fis ) {
+                                for my $fi ( @fis ) {
+                                    my $res = $pub->rebuild_from_fileinfo( $fi );
+                                }
+                            }
+                            return '';
+                        }
+                    }
+
