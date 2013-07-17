@@ -33,7 +33,7 @@ tags:
                         $params2->{ archive_type } = ($class = 'category') ? 'Category' : 'Folder';
                         for my $category ( @categories ) {
                             $params2->{ category_id } = $category->id;
-                            my @fis = MT::FileInfo->load( $params );
+                            my @fis = mt->model( 'fileinfo' )->load( $params2 );
                             require MT::WeblogPublisher;
                             my $pub = MT::WeblogPublisher->new;
                             if ( @fis ) {
