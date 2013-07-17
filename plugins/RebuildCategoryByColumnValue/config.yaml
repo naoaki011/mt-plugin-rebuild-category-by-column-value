@@ -25,14 +25,14 @@ tags:
                         return '' unless $eq;
                         my $params;
                         $params->{ blog_id } = $blog_id if $blog_id;
-                        $params->{ archive_type } = $class;
+                        $params->{ class } = $class;
                         $params->{ $column } = $eq;
-                        require MT::Category;
-                        my @categories = MT::Category->load( $params );
-                        $params->{ archive_type } = ($class = 'category') ? 'Category' : 'Folder';
-                        $params->{ $column } = undef;
+                        my @categories = mt->model( 'category' )->load( $params );
+                        my $params2;
+                        $params2->{ blog_id } = $blog_id if $blog_id;
+                        $params2->{ archive_type } = ($class = 'category') ? 'Category' : 'Folder';
                         for my $category ( @categories ) {
-                            $params->{ category_id } = $category->id;
+                            $params2->{ category_id } = $category->id;
                             my @fis = MT::FileInfo->load( $params );
                             require MT::WeblogPublisher;
                             my $pub = MT::WeblogPublisher->new;
