@@ -1,4 +1,4 @@
-mt-plugin-rebuild-category-by-column-value
+RebuildCategory by ColumnValue
 ==========================================
 
 &lt;MTRebuildCategoryByColumnValue eq="hoge"&gt;
