@@ -1,10 +1,10 @@
 mt-plugin-rebuild-category-by-column-value
 ==========================================
 
-<MTRebuildCategoryByColumnValue eq="hoge">
+&lt;MTRebuildCategoryByColumnValue eq="hoge"&gt;
 カテゴリー名がhogeのカテゴリーアーカイブが再構築される。
 
-<MTRebuildCategoryByColumnValue column="label" class="category" eq="hoge">
+&lt;MTRebuildCategoryByColumnValue column="label" class="category" eq="hoge"&gt;
 上と同じ動作をする。
 
 column: mt_categoryのカラムを指定する（ex. id, basename, label）
