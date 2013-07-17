@@ -31,6 +31,12 @@ tags:
                         my $params2;
                         $params2->{ blog_id } = $blog_id if $blog_id;
                         $params2->{ archive_type } = ($class = 'category') ? 'Category' : 'Folder';
+
+                        my $template_id = $args->{ template_id };
+                        my $templatemap_id = $args->{ templatemap_id };
+                        $params2->{ template_id } = $template_id if $template_id;
+                        $params2->{ templatemap_id } = $templatemap_id if $templatemap_id;
+
                         for my $category ( @categories ) {
                             $params2->{ category_id } = $category->id;
                             my @fis = mt->model( 'fileinfo' )->load( $params2 );
