@@ -27,7 +27,26 @@ tags:
                         $params->{ blog_id } = $blog_id if $blog_id;
                         $params->{ class } = $class;
                         $params->{ $column } = $eq;
-                        my @categories = mt->model( 'category' )->load( $params );
+                        my $args = {};
+                        if ( $column =~ /^field\./ ) {
+                            my $target_class = MT->model( $class );
+                            my $meta_class = $target_class->meta_pkg;
+                            my $meta_pk = $meta_class->primary_key_tuple->[ 0 ];
+                            my $meta_id_cond = '= ' . $meta_pk;
+                            my $meta_rec = MT::Meta->metadata_by_name( $target_class, $column );
+                            my $meta_col = $meta_rec->{ type };
+                            $args->{ 'join' } = 
+                                $meta_class->join_on(
+                                                undef,
+                                                {
+                                                    $meta_pk => \$meta_id_cond,
+                                                    type => $column,
+                                                    $meta_col => $eq,
+                                                },
+                                            ),
+                            delete $params->{ $column };
+                        }
+                        my @categories = mt->model( 'category' )->load( $params, $args );
                         my $params2;
                         $params2->{ blog_id } = $blog_id if $blog_id;
                         $params2->{ archive_type } = ($class = 'category') ? 'Category' : 'Folder';
