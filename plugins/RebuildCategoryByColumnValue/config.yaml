@@ -9,9 +9,9 @@ tags:
                 sub {
                         my ( $ctx, $args, $cond ) = @_;
                         my $app = MT->instance;
-                        return if ref( $app ) !~ /^MT::App/;
-                        my $mode = $app->mode;
-                        return if ( $mode =~ /preview/ );
+                        if ( ref( $app ) =~ /^MT::App/ ) {
+                            return if ( $app->mode =~ /preview/ );
+                        }
                         my $blog_id = $args->{ blog_id };
                         if (! $blog_id ) {
                             $blog_id = $app->blog->id;
